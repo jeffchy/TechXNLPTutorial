@@ -83,3 +83,11 @@ def eval_seq_token(seq_label_pred, seq_label_true, o_idx=0):
     f1 = 2 * precision * recall / (precision + recall) if  (precision + recall != 0) else 0
 
     return accuracy, precision, recall, f1
+
+def get_length_mask(length):
+    assert len(length.shape) == 1
+    max_len = length.max().item()
+    mask = torch.arange(max_len, device=length.device,
+                        dtype=length.dtype).expand(len(length), max_len) < length.unsqueeze(1)
+
+    return mask.bool()
